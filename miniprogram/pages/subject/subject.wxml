@@ -1,0 +1,86 @@
+<!-- 科目/章节选择页 -->
+<view class="container">
+
+  <!-- ============ 科目选择 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:20rpx;">选择科目</view>
+    <view class="subject-row">
+      <view
+        wx:for="{{subjects}}"
+        wx:key="subject"
+        class="subject-item {{activeSubject === item.subject ? 'active' : ''}}"
+        bindtap="onSwitchSubject"
+        data-subject="{{item.subject}}"
+      >
+        <view class="subject-name">{{item.shortTitle}}</view>
+        <view class="subject-meta">{{item.title}}</view>
+        <view class="subject-count">{{item.questionCount}} 题</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 科目进度 ============ -->
+  <view class="card">
+    <view class="row-between">
+      <view>
+        <view class="title">本科目进度</view>
+        <view class="text-muted">已完成 {{summary.done}} / {{summary.total}} 题</view>
+      </view>
+      <view class="text-primary num" style="font-size:40rpx;">{{summary.accuracy}}%</view>
+    </view>
+  </view>
+
+  <!-- ============ 章节选择 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:8rpx;">选择章节</view>
+    <view class="text-muted" style="margin-bottom:24rpx;">
+      不选则从全部题目中随机出题；再点一次已选章节可取消
+    </view>
+
+    <view
+      wx:for="{{modules}}"
+      wx:key="key"
+      class="module-item {{activeModule === item.key ? 'active' : ''}}"
+      bindtap="onPickModule"
+      data-key="{{item.key}}"
+    >
+      <view class="row-between" style="margin-bottom:6rpx;">
+        <view class="row">
+          <text class="module-name">{{item.name}}</text>
+          <text class="module-check" wx:if="{{activeModule === item.key}}">✓</text>
+        </view>
+        <text class="text-muted">{{item.done}}/{{item.total}}</text>
+      </view>
+      <view class="module-desc">{{item.desc}}</view>
+      <view class="progress-bar" style="margin-top:14rpx;">
+        <view class="progress-inner" style="width:{{item.percent}}%;"></view>
+      </view>
+      <view class="row-between" style="margin-top:8rpx;">
+        <text class="text-muted">正确率</text>
+        <text class="text-muted {{item.done > 0 && item.accuracy < 60 ? 'text-danger' : ''}}">{{item.accuracy}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 题量选择 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:20rpx;">每组题量</view>
+    <view class="count-row">
+      <view
+        wx:for="{{countOptions}}"
+        wx:key="*this"
+        class="count-item {{activeCount === item ? 'active' : ''}}"
+        bindtap="onPickCount"
+        data-count="{{item}}"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <view class="footer-space"></view>
+
+  <view class="footer-bar">
+    <button class="btn btn-primary" bindtap="onStart">
+      {{activeModule ? '开始练习这一章' : '随机练习 ' + activeCount + ' 题'}}
+    </button>
+  </view>
+</view>

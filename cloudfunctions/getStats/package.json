@@ -1,0 +1,9 @@
+{
+  "name": "getStats",
+  "version": "1.0.0",
+  "description": "汇总用户学习数据：累计题量、正确率、近 7 日趋势",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

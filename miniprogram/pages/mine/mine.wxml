@@ -1,0 +1,121 @@
+<!--
+  miniprogram/pages/mine/mine.wxml —— 我的
+
+  【页面结构】
+  1. 头像区：文字头像（不请求任何权限，个人主体也能用）
+  2. 数据概览：做题总数 / 正确率 / 连续打卡
+  3. 功能列表：倒计时、题量、错题本、数据、说明
+  4. 关于区块：项目介绍 + 反馈 + 危险操作
+  5. 云端状态：本地模式时给一句说明，避免用户以为数据丢了
+-->
+<view class="container">
+
+  <!-- ============ 头像区 ============ -->
+  <!--
+    【为什么用文字头像而不是微信头像】
+    wx.getUserProfile 需要用户主动点击触发授权，
+    而且个人主体的小程序现在基本拿不到头像昵称。
+    用一个圆形色块 + "教"字实现头像，零权限、零风险，
+    视觉上也能让用户认出这是自己的备考账号。
+  -->
+  <view class="card profile-card">
+    <view class="profile-avatar">教</view>
+    <view class="profile-info">
+      <view class="profile-name">教资备考者</view>
+      <view class="text-muted">
+        今天已刷 {{todayCount}} 题 · 连续 {{streakDays}} 天
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 数据概览 ============ -->
+  <!--
+    【为什么放在"我的"而不是只在"数据"页展示】
+    数据页是用户主动去看分析的，
+    "我的"页是随手看到的，把长期努力成果放在这里能强化动机。
+  -->
+  <view class="card">
+    <view class="overview-row">
+      <view class="overview-cell">
+        <view class="overview-num">{{totalDone}}</view>
+        <view class="text-muted">累计做题</view>
+      </view>
+      <view class="overview-cell">
+        <view class="overview-num {{accuracy < 60 ? 'text-danger' : 'text-success'}}">
+          {{accuracy}}%
+        </view>
+        <view class="text-muted">总正确率</view>
+      </view>
+      <view class="overview-cell">
+        <view class="overview-num {{streakDays > 0 ? 'text-primary' : ''}}">
+          {{streakDays}}
+        </view>
+        <view class="text-muted">连续打卡</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 功能列表 ============ -->
+  <!--
+    【数据驱动的写法】
+    menuList 在 mine.js 里生成，每项带一个 key。
+    点击时 bindtap 把 key 传回 JS，onMenuTap 里 switch 分发到不同处理函数。
+    以后加功能只改 JS 数组，WXML 一行都不用动。
+  -->
+  <view class="card">
+    <view
+      wx:for="{{menuList}}"
+      wx:key="key"
+      class="menu-item"
+      bindtap="onMenuTap"
+      data-key="{{item.key}}"
+    >
+      <view class="flex-1">
+        <view class="menu-label">{{item.label}}</view>
+        <!-- value 为空时不渲染，避免出现一个空的占位 -->
+        <view wx:if="{{item.value}}" class="menu-value">{{item.value}}</view>
+      </view>
+      <!-- 右箭头，纯装饰不可点，整行才是点击区域 -->
+      <view class="menu-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- ============ 关于区块 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:12rpx;">关于</view>
+    <!-- 【注意】WXML 里的 \n 不会换行，会原样显示，所以拆成两行 -->
+    <view class="text-muted" style="line-height:1.8;">
+      教资备考工作台 v{{version}}
+    </view>
+    <view class="text-muted" style="line-height:1.8;margin-top:8rpx;">
+      教师资格证笔试免费题库，覆盖科目一综合素质与科目二教育知识与能力，离线可用，进度保存在本机。
+    </view>
+
+    <button class="btn btn-ghost about-btn" bindtap="onFeedback">
+      意见反馈
+    </button>
+
+    <!--
+      清除数据是危险操作，用描边按钮而不是主色按钮，
+      视觉上就比常规操作弱一档，减少误点。
+    -->
+    <button class="btn btn-plain about-btn" bindtap="onClearAll">
+      清除全部数据
+    </button>
+  </view>
+
+  <!-- ============ 云端状态 ============ -->
+  <!--
+    【为什么要告诉用户当前是不是本地模式】
+    没开通云开发时数据只存在本机。换手机、清理缓存都会丢。
+    明确告诉用户当前状态，比他事后发现数据没了才发现问题要好。
+  -->
+  <view class="cloud-tip {{online ? 'on' : 'off'}}">
+    <view class="dot"></view>
+    <view class="flex-1">
+      {{online ? '数据已同步到云端，换手机也不会丢' : '当前为本地模式，数据不会同步到云端'}}
+    </view>
+  </view>
+
+  <view class="footer-space"></view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "学习数据",
+  "navigationBarBackgroundColor": "#1F5EFF",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true
+}

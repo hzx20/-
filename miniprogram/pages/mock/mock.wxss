@@ -1,0 +1,303 @@
+/* 模考页样式 */
+
+.mock-page {
+  min-height: 100vh;
+  background: #F4F6FB;
+}
+
+/* ============ 阶段一：开始前 ============ */
+.ready-card {
+  margin-top: 40rpx;
+  text-align: center;
+}
+
+.ready-title {
+  font-size: 40rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.ready-sub {
+  font-size: 26rpx;
+  color: #9AA1AE;
+  margin-bottom: 40rpx;
+}
+
+.rule-list {
+  text-align: left;
+  padding: 8rpx 0;
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 28rpx;
+}
+
+.rule-num {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(31, 94, 255, 0.1);
+  color: #1F5EFF;
+  font-size: 22rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.rule-title {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.rule-desc {
+  font-size: 23rpx;
+  color: #9AA1AE;
+  margin-top: 4rpx;
+  line-height: 1.5;
+}
+
+.ready-tip {
+  background: #F7F9FC;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 24rpx;
+  color: #6B7280;
+  margin-top: 8rpx;
+}
+
+/* ============ 阶段二：答题中 ============ */
+.mock-top {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #FFFFFF;
+  padding: 20rpx 24rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.mock-progress {
+  font-size: 28rpx;
+  color: #374151;
+}
+
+.mock-progress .num {
+  font-size: 34rpx;
+  color: #1F5EFF;
+}
+
+/* 倒计时是答题时最大的压力来源，字号做大 */
+.mock-timer {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1A1D26;
+  font-family: 'DIN Alternate', -apple-system, sans-serif;
+}
+
+/* 剩 5 分钟变红，制造紧迫感 */
+.mock-timer.warning {
+  color: #F04438;
+}
+
+/* 模考选项：比刷题页样式更简洁，因为不显示对错 */
+.mock-option {
+  display: flex;
+  align-items: flex-start;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 26rpx 24rpx;
+  margin-bottom: 16rpx;
+  border: 3rpx solid transparent;
+}
+
+.mock-key {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: #EEF1F7;
+  color: #6B7280;
+  font-size: 26rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.mock-key.active {
+  background: #1F5EFF;
+  color: #FFFFFF;
+}
+
+.mock-option.active {
+  border-color: #1F5EFF;
+  background: rgba(31, 94, 255, 0.04);
+}
+
+.mock-option-text {
+  font-size: 30rpx;
+  line-height: 1.6;
+  padding-top: 6rpx;
+}
+
+.mock-textarea {
+  width: 100%;
+  min-height: 300rpx;
+  background: #F7F9FC;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 30rpx;
+  line-height: 1.7;
+  box-sizing: border-box;
+}
+
+.mock-placeholder {
+  color: #B6BDC9;
+  font-size: 26rpx;
+}
+
+/* 答题卡 */
+.card-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.card-cell {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 12rpx;
+  margin: 0 16rpx 16rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: 500;
+  background: #F4F6FB;
+  color: #9AA1AE;
+}
+
+.card-cell.undone {
+  background: #F4F6FB;
+  color: #9AA1AE;
+}
+
+/* 已作答：浅蓝底，方便一眼看出做过了 */
+.card-cell.done {
+  background: rgba(31, 94, 255, 0.12);
+  color: #1F5EFF;
+}
+
+/* 当前题：实心蓝 + 描边 */
+.card-cell.current {
+  background: #1F5EFF;
+  color: #FFFFFF;
+}
+
+.card-legend {
+  display: flex;
+  flex-direction: row;
+  margin-top: 8rpx;
+}
+
+.card-legend .row {
+  margin-right: 32rpx;
+}
+
+.legend-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 6rpx;
+  margin-right: 10rpx;
+}
+
+.legend-dot.undone {
+  background: #F4F6FB;
+  border: 2rpx solid #E0E4EC;
+}
+
+.legend-dot.done {
+  background: rgba(31, 94, 255, 0.12);
+}
+
+/* 底部导航 */
+.mock-nav {
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-btn {
+  flex: 1;
+  margin: 0 12rpx;
+}
+
+/* ============ 阶段三：交卷后 ============ */
+.done-card {
+  text-align: center;
+  margin-top: 20rpx;
+}
+
+.done-score {
+  font-size: 120rpx;
+  line-height: 1.1;
+  color: #1F5EFF;
+  margin: 12rpx 0;
+}
+
+.done-detail {
+  font-size: 28rpx;
+  color: #6B7280;
+  margin-bottom: 24rpx;
+}
+
+.done-tag {
+  display: inline-block;
+  padding: 10rpx 32rpx;
+  border-radius: 28rpx;
+  font-size: 26rpx;
+}
+
+.done-tag.ok {
+  background: rgba(18, 183, 106, 0.12);
+  color: #12B76A;
+}
+
+.done-tag.mid {
+  background: rgba(255, 138, 0, 0.12);
+  color: #D97706;
+}
+
+.done-tag.bad {
+  background: rgba(240, 68, 56, 0.12);
+  color: #F04438;
+}
+
+/* 解析列表 */
+.explain-item {
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #F0F2F6;
+}
+
+.explain-stem {
+  font-size: 28rpx;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.explain-box {
+  background: #F7F9FC;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-top: 16rpx;
+}
+
+.explain-text {
+  font-size: 27rpx;
+  line-height: 1.75;
+  color: #374151;
+}

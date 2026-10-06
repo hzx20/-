@@ -1,0 +1,113 @@
+/* 科目选择页样式 */
+
+/* ============ 科目卡片 ============ */
+.subject-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.subject-item {
+  flex: 1;
+  padding: 28rpx 16rpx;
+  border-radius: 16rpx;
+  background: #F4F6FB;
+  margin-right: 20rpx;
+  text-align: center;
+  border: 3rpx solid transparent;
+}
+
+.subject-item:last-child {
+  margin-right: 0;
+}
+
+.subject-item.active {
+  background: #FFFFFF;
+  border-color: #1F5EFF;
+  padding: 26rpx 14rpx;
+}
+
+.subject-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.subject-meta {
+  font-size: 22rpx;
+  color: #9AA1AE;
+  line-height: 1.4;
+  margin-bottom: 8rpx;
+}
+
+.subject-count {
+  font-size: 24rpx;
+  color: #1F5EFF;
+  font-weight: 500;
+}
+
+/* ============ 章节列表 ============ */
+.module-item {
+  background: #F7F9FC;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  border: 3rpx solid transparent;
+}
+
+.module-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 选中的章节高亮 */
+.module-item.active {
+  background: rgba(31, 94, 255, 0.05);
+  border-color: #1F5EFF;
+}
+
+.module-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+/* 选中标记 */
+.module-check {
+  color: #1F5EFF;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-left: 12rpx;
+}
+
+.module-desc {
+  font-size: 23rpx;
+  color: #9AA1AE;
+  line-height: 1.5;
+}
+
+/* ============ 题量选择 ============ */
+.count-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.count-item {
+  flex: 1;
+  height: 84rpx;
+  border-radius: 14rpx;
+  background: #F4F6FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #6B7280;
+  margin-right: 16rpx;
+}
+
+.count-item:last-child {
+  margin-right: 0;
+}
+
+.count-item.active {
+  background: #1F5EFF;
+  color: #FFFFFF;
+}

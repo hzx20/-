@@ -1,0 +1,180 @@
+/* 错题本样式 */
+
+/* ============ 顶部统计条 ============ */
+.wb-stat-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.wb-stat {
+  /* 【为什么用 flex:1】让三个数字等宽平分，视觉上更整齐 */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wb-stat-num {
+  font-size: 52rpx;
+  font-weight: 700;
+  line-height: 1.2;
+  font-family: 'DIN Alternate', -apple-system, sans-serif;
+}
+
+/* ============ 错题条目 ============ */
+.wb-item {
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #F0F2F6;
+}
+
+.wb-item:last-child {
+  border-bottom: none;
+}
+
+.wb-brief {
+  font-size: 28rpx;
+  line-height: 1.65;
+  color: #374151;
+  word-break: break-word;
+}
+
+/* 已掌握的题把文字变淡，让用户视觉上快速跳过 */
+.wb-brief.done {
+  color: #9AA1AE;
+}
+
+.wb-arrow {
+  font-size: 24rpx;
+  color: #1F5EFF;
+  margin-top: 12rpx;
+}
+
+/* ============ 详情弹层 ============ */
+/*
+  遮罩：fixed 铺满全屏，半透明黑。
+  z-index 要高于 footer-bar（那里是 100），这里用 200。
+*/
+.detail-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* 抽屉面板：占据屏幕下方约 80%，向上滑动感的视觉 */
+.detail-panel {
+  background: #FFFFFF;
+  border-radius: 28rpx 28rpx 0 0;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detail-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 28rpx 20rpx;
+  border-bottom: 2rpx solid #F0F2F6;
+  flex-shrink: 0;
+}
+
+.detail-close {
+  font-size: 36rpx;
+  color: #9AA1AE;
+  padding: 0 8rpx;
+}
+
+.detail-body {
+  /* 【关键】scroll-view 必须给固定高度才能滚动，
+     flex:1 让它占满面板剩余空间，面板又是固定 80vh，
+     这样内容再长也能正常滚动 */
+  flex: 1;
+  padding: 28rpx;
+}
+
+.detail-stem {
+  font-size: 30rpx;
+  line-height: 1.75;
+  font-weight: 500;
+  color: #1A1D26;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-options {
+  margin-top: 24rpx;
+}
+
+.detail-option {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 18rpx 0;
+  border-bottom: 2rpx solid #F4F6FB;
+}
+
+.detail-option:last-child {
+  border-bottom: none;
+}
+
+.detail-option-key {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: #EEF1F7;
+  color: #6B7280;
+  font-size: 24rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.detail-option-text {
+  font-size: 28rpx;
+  line-height: 1.6;
+  padding-top: 4rpx;
+}
+
+.detail-answer {
+  background: rgba(18, 183, 106, 0.08);
+  color: #12B76A;
+  padding: 20rpx 24rpx;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-top: 24rpx;
+}
+
+.detail-explain-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1F5EFF;
+  margin-top: 32rpx;
+  margin-bottom: 12rpx;
+}
+
+.detail-explain-text {
+  font-size: 28rpx;
+  line-height: 1.85;
+  color: #374151;
+  white-space: pre-wrap;
+}
+
+.detail-foot {
+  padding: 20rpx 28rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 2rpx solid #F0F2F6;
+  flex-shrink: 0;
+}

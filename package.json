@@ -1,0 +1,21 @@
+{
+  "name": "jiaozi-shuati",
+  "version": "0.1.0",
+  "private": true,
+  "description": "教资刷题小程序 - 教师资格证笔试备考工具",
+  "scripts": {
+    "test": "node tools/test_grade.js && node tools/test_store.js",
+    "test:grade": "node tools/test_grade.js",
+    "test:store": "node tools/test_store.js",
+    "validate:bank": "python tools/validate_bank.py",
+    "check": "npm run validate:bank && npm test"
+  },
+  "keywords": [
+    "教资",
+    "教师资格证",
+    "刷题",
+    "题库",
+    "小程序"
+  ],
+  "license": "MIT"
+}

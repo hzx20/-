@@ -1,0 +1,140 @@
+<!--
+  miniprogram/pages/wrongbook/wrongbook.wxml —— 错题本
+
+  【页面结构】
+  1. 顶部统计条：错题总数 / 已掌握 / 掌握率
+  2. 空状态：没有错题时替代一切内容
+  3. 按科目分组的错题列表
+  4. 详情弹层：点单条弹出，看完整题干和解析
+  5. 底部操作条：重做全部 / 清空
+-->
+<view class="container">
+
+  <!-- ============ 顶部统计 ============ -->
+  <!--
+    【为什么掌握率要放在最显眼的位置】
+    错题本是"越看越焦虑"的地方，单纯显示"你错了 87 道"会劝退用户。
+    配上掌握率，用户看到的是"我在变强"，而不是"我太差"。
+  -->
+  <view class="card">
+    <view class="wb-stat-row">
+      <view class="wb-stat">
+        <view class="wb-stat-num text-danger">{{total}}</view>
+        <view class="text-muted">错题总数</view>
+      </view>
+      <view class="wb-stat">
+        <view class="wb-stat-num text-success">{{mastered}}</view>
+        <view class="text-muted">已掌握</view>
+      </view>
+      <view class="wb-stat">
+        <view class="wb-stat-num text-primary">{{masterRate}}%</view>
+        <view class="text-muted">掌握率</view>
+      </view>
+    </view>
+    <view class="progress-bar" style="margin-top:24rpx;">
+      <view class="progress-inner" style="width:{{masterRate}}%;"></view>
+    </view>
+    <view class="text-muted" style="margin-top:12rpx;">
+      还差 {{unmastered}} 道就全部掌握，重做做对后会自动移出错题本
+    </view>
+  </view>
+
+  <!-- ============ 空状态 ============ -->
+  <view wx:if="{{empty}}" class="empty">
+    <view class="empty-icon">✨</view>
+    <!--
+      【注意】WXML 里的 \n 不会换行，会原样显示成"\n"两个字符。
+      所以要换行必须拆成两个 view，不能在文字里写 \n。
+    -->
+    <view class="empty-text">错题本是空的</view>
+    <view class="empty-text">说明你还没做错题，或者已经全部订正完了</view>
+    <button class="btn btn-primary" style="margin-top:48rpx;" bindtap="onGoPractice">
+      去刷题
+    </button>
+  </view>
+
+  <!-- ============ 错题列表 ============ -->
+  <block wx:else>
+    <view wx:for="{{groups}}" wx:key="subject" wx:for-item="group" class="card">
+      <view class="row-between" style="margin-bottom:8rpx;">
+        <view class="title">{{group.subjectTitle}}</view>
+        <text class="text-muted">{{group.count}} 道</text>
+      </view>
+      <view class="divider"></view>
+
+      <view
+        wx:for="{{group.items}}"
+        wx:key="id"
+        class="wb-item"
+        bindtap="onTapItem"
+        data-id="{{item.id}}"
+      >
+        <view class="row" style="margin-bottom:10rpx;">
+          <text class="tag tag-blue" wx:if="{{item.moduleName}}">{{item.moduleName}}</text>
+          <text class="tag tag-gray">{{item.difficultyLabel}}</text>
+          <text class="tag tag-orange" wx:if="{{item.typeLabel === '材料分析'}}">{{item.typeLabel}}</text>
+          <!-- 已掌握的题打绿标，让用户看到自己的成果 -->
+          <text class="tag tag-green" wx:if="{{item.mastered}}">已掌握</text>
+        </view>
+        <view class="wb-brief {{item.mastered ? 'done' : ''}}">{{item.brief}}</view>
+        <view class="wb-arrow">查看解析 ›</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ============ 底部操作条 ============ -->
+  <view class="footer-bar" wx:if="{{!empty}}">
+    <view class="row">
+      <button class="btn btn-plain flex-1" style="margin-right:20rpx;" bindtap="onClearBook">
+        清空
+      </button>
+      <button class="btn btn-primary flex-1" bindtap="onRedoAll">
+        重做全部错题（{{total}}）
+      </button>
+    </view>
+  </view>
+
+  <!-- 给固定底栏留出空间，避免最后一条错题被按钮挡住 -->
+  <view wx:if="{{!empty}}" class="footer-space"></view>
+
+  <!-- ============ 题目详情弹层 ============ -->
+  <!--
+    【为什么用自绘弹层而不是 wx.showModal】
+    showModal 只能放纯文字，装不下题干、选项、解析。
+    这里用一个 fixed 定位的全屏遮罩 + 底部抽屉自己实现。
+    遮罩用 catchtap 而不是 bindtap，点内容区不会误关闭。
+  -->
+  <view wx:if="{{showDetail}}" class="detail-mask" catchtap="onCloseDetail">
+    <view class="detail-panel" catchtap="onStopPropagation">
+      <view class="detail-head">
+        <view class="row">
+          <text class="tag tag-blue" wx:if="{{detail.moduleName}}">{{detail.moduleName}}</text>
+          <text class="tag tag-gray">{{detail.difficultyLabel}}</text>
+          <text class="tag tag-orange">{{detail.typeLabel}}</text>
+        </view>
+        <view class="detail-close" bindtap="onCloseDetail">✕</view>
+      </view>
+
+      <scroll-view class="detail-body" scroll-y="true">
+        <view class="detail-stem">{{detail.stem}}</view>
+
+        <!-- 单选题：逐个列出选项 -->
+        <view wx:if="{{detail.hasOptions}}" class="detail-options">
+          <view wx:for="{{detail.options}}" wx:key="key" class="detail-option">
+            <view class="detail-option-key">{{item.key}}</view>
+            <view class="flex-1 detail-option-text">{{item.text}}</view>
+          </view>
+        </view>
+
+        <view class="detail-answer">正确答案：{{detail.answerText}}</view>
+
+        <view class="detail-explain-title">解析</view>
+        <view class="detail-explain-text">{{detail.explain}}</view>
+      </scroll-view>
+
+      <view class="detail-foot">
+        <button class="btn btn-primary" bindtap="onCloseDetail">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

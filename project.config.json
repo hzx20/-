@@ -1,0 +1,47 @@
+{
+  "desc": "关于本文件的更多文档请关注文档 https://developers.weixin.qq.com/miniprogram/dev/framework/",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "compileType": "miniprogram",
+  "appid": "touristappid",
+  "projectname": "jiaozi-shuati",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": false,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "packNpmManually": false,
+    "ignoreDevUnusedFiles": false,
+    "useCompilerModule": true,
+    "userConfirmedUseCompilerModuleSwitch": false,
+    "checkInvalidKey": true,
+    "showShadowRootInWxmlPanel": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "首页",
+          "pathName": "pages/index/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "刷题-科目一",
+          "pathName": "pages/practice/practice",
+          "query": "subject=1&mode=chapter&chapter=career",
+          "scene": null
+        }
+      ]
+    }
+  }
+}

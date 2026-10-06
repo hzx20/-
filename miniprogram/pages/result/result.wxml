@@ -1,0 +1,120 @@
+<!--
+  miniprogram/pages/result/result.wxml —— 本组结果页
+
+  【页面结构，从上到下的视觉顺序是刻意的】
+  1. 大号正确率：先给结果，用户最关心的
+  2. 评价文案：给结果加一句"人话"，告诉用户下一步
+  3. 错题预览：告诉用户"错在哪"，这是本页面最有价值的部分
+  4. 三个按钮：给出明确的下一步动作
+
+  【为什么错题预览不放折叠面板】
+  折叠面板默认收起，用户看不到里面有多少内容，就不会点。
+  错题是用户来这个页面的唯一理由，必须直接摊开。
+-->
+<view class="container">
+
+  <!-- ============ 正确率大数字 ============ -->
+  <!--
+    【视觉设计】
+    正确率用 120rpx 的超大字号，是全页唯一的视觉焦点。
+    颜色由 commentClass 决定（lv4 绿 / lv3 蓝 / lv2 橙 / lv1 红），
+    对应不同水平的正确率。
+  -->
+  <view class="card score-card">
+    <view class="text-muted">{{groupTitle}}</view>
+
+    <!-- 参数缺失的兜底分支：一道题都没做，不展示评分 -->
+    <block wx:if="{{invalid}}">
+      <view class="score-num score-none">--</view>
+      <view class="text-muted">本组没有作答记录</view>
+    </block>
+
+    <block wx:else>
+      <view class="score-row">
+        <text class="score-num {{commentClass}}">{{accuracy}}</text>
+        <text class="score-unit">%</text>
+      </view>
+      <view class="score-line">答对 {{correct}} / {{answered}} 题</view>
+      <view class="comment-badge {{commentClass}}">{{commentText}}</view>
+    </block>
+  </view>
+
+  <!-- ============ 错题预览 ============ -->
+  <view class="card">
+    <view class="row-between" style="margin-bottom:8rpx;">
+      <view class="title">本组错题</view>
+      <text class="text-muted">
+        本次新增 {{newWrongCount}} 题 · 错题本共 {{wrongBookTotal}} 题
+      </text>
+    </view>
+
+    <!-- 全部答对的正向反馈，比空白列表让人感觉好得多 -->
+    <view wx:if="{{!invalid && wrongList.length === 0}}" class="perfect-box">
+      <view class="perfect-icon">🎉</view>
+      <view class="text-success">本组全部答对，没有新增错题</view>
+    </view>
+
+    <view wx:if="{{invalid}}" class="text-muted">
+      这次没有作答记录，进度不会计入统计。
+    </view>
+
+    <!--
+      错题列表。
+      data-id 传题目 id，方便点击时知道是哪一条。
+      这里只展示题干摘要，不展示选项——结果页不做题，是"回顾"不是"练习"。
+    -->
+    <view
+      wx:for="{{wrongList}}"
+      wx:key="id"
+      class="wrong-item"
+      bindtap="onTapWrongItem"
+      data-id="{{item.id}}"
+    >
+      <view class="row" style="margin-bottom:10rpx;">
+        <text class="tag tag-blue" wx:if="{{item.moduleName}}">{{item.moduleName}}</text>
+        <text class="tag tag-gray">{{item.difficultyLabel}}</text>
+        <text class="tag tag-orange" wx:if="{{item.typeLabel === '材料分析'}}">{{item.typeLabel}}</text>
+      </view>
+      <view class="wrong-brief">{{item.brief}}</view>
+    </view>
+
+    <!-- 超过 5 条时的提示，避免用户以为只有 5 道 -->
+    <view wx:if="{{wrongMore > 0}}" class="text-muted" style="margin-top:16rpx;">
+      还有 {{wrongMore}} 道错题，去错题本查看全部
+    </view>
+  </view>
+
+  <!-- ============ 操作按钮 ============ -->
+  <view class="card">
+    <view class="text-muted" style="margin-bottom:24rpx;">
+      错题重做会练习错题本里的全部题目，不只是本组这几道。
+    </view>
+
+    <button
+      class="btn btn-primary quick-btn"
+      bindtap="onRedoWrong"
+      disabled="{{wrongList.length === 0 && newWrongCount === 0}}"
+    >重做本组错题</button>
+
+    <button class="btn btn-ghost quick-btn" bindtap="onViewWrongBook">
+      查看全部错题本
+    </button>
+
+    <button class="btn btn-plain quick-btn" bindtap="onContinue">
+      继续刷题
+    </button>
+  </view>
+
+  <!-- ============ 底部 banner 广告位 ============ -->
+  <!--
+    【为什么放最后】
+    banner 广告是收益补充，不是内容。
+    放在所有内容之后，用户先看到有用的东西，不会觉得被广告打扰。
+    adEnabled 为 false 时整个块不渲染，页面不留空白。
+  -->
+  <view wx:if="{{adEnabled}}" class="ad-slot">
+    <ad wx:if="{{adBannerId}}" unit-id="{{adBannerId}}" ad-type="banner"></ad>
+  </view>
+
+  <view class="footer-space"></view>
+</view>

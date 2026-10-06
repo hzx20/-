@@ -1,0 +1,32 @@
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+
+# 微信开发者工具的本地配置（每个人不一样，不该进仓库）
+project.private.config.json
+*.local
+
+# ⚠️ 敏感信息：绝对不能提交
+# 环境 ID 可以提交（不算密钥），但 API Key 绝不能提交
+.env
+.env.*
+*.key
+*.pem
+secrets.json
+
+# 云函数本地调试产物
+cloudfunctions/**/node_modules/
+cloudfunctions/**/.DS_Store
+
+# 编辑器与系统文件
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# 备份文件（改文件时可能生成的）
+*.bak
+*.orig
+*~

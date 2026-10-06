@@ -1,0 +1,226 @@
+<!--
+  miniprogram/pages/mock/mock.wxml —— 模考页
+
+  【三个阶段】
+  ready  开始前：显示模考说明和规则
+  doing  答题中：显示题目、计时器、答题卡
+  done   交卷后：显示成绩和解析入口
+-->
+<view class="mock-page">
+
+  <!-- ============ 阶段一：开始前 ============ -->
+  <block wx:if="{{phase === 'ready'}}">
+    <view class="card ready-card">
+      <view class="ready-title">{{subjectName}}</view>
+      <view class="ready-sub">限时模考 · 模拟真实笔试节奏</view>
+
+      <view class="rule-list">
+        <view class="rule-item">
+          <text class="rule-num">1</text>
+          <view>
+            <view class="rule-title">题量 {{mockCount}} 题</view>
+            <view class="rule-desc">按真实笔试的题量比例设定，练题量适应度</view>
+          </view>
+        </view>
+        <view class="rule-item">
+          <text class="rule-num">2</text>
+          <view>
+            <view class="rule-title">限时 {{mockMinutes}} 分钟</view>
+            <view class="rule-desc">真实笔试为 {{mockTotal}} 分钟，本模考按比例缩短</view>
+          </view>
+        </view>
+        <view class="rule-item">
+          <text class="rule-num">3</text>
+          <view>
+            <view class="rule-title">中途不显示对错</view>
+            <view class="rule-desc">与真实考试一致，交卷后一次性出成绩</view>
+          </view>
+        </view>
+        <view class="rule-item">
+          <text class="rule-num">4</text>
+          <view>
+            <view class="rule-title">超时自动交卷</view>
+            <view class="rule-desc">倒计时结束会强制交卷，未作答不得分</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="ready-tip">
+        模考中做错的题会自动进入错题本，和平时刷题一样
+      </view>
+
+      <button class="btn btn-primary" style="margin-top:36rpx;" bindtap="onStart">
+        开始模考
+      </button>
+      <button class="btn btn-plain" style="margin-top:20rpx;" bindtap="onBackHome">
+        再看看
+      </button>
+    </view>
+  </block>
+
+  <!-- ============ 阶段二：答题中 ============ -->
+  <block wx:elif="{{phase === 'doing'}}">
+    <!-- 顶部：计时器 + 进度 -->
+    <view class="mock-top">
+      <view class="row-between">
+        <view class="mock-progress">
+          第 <text class="num">{{currentIndex + 1}}</text> / {{questions.length}} 题
+        </view>
+        <view class="mock-timer {{timeWarning ? 'warning' : ''}}">
+          剩余 {{remainText}}
+        </view>
+      </view>
+      <view class="progress-bar" style="margin-top:16rpx;">
+        <view class="progress-inner" style="width:{{progressPercent}}%;"></view>
+      </view>
+    </view>
+
+    <view class="container">
+      <!--
+  【重要】这里所有"当前题答案"都读 currentChoice / currentDraft，
+  不读 answers[currentQuestion.id]。
+  小程序 WXML 的表达式引擎不支持用变量做对象键名（动态 key），
+  那样写不会报错，但永远取不到值，表现为选中状态完全不生效。
+-->
+      <view class="card">
+        <view class="row" style="margin-bottom:16rpx;">
+          <text class="tag tag-blue">{{currentModule}}</text>
+        </view>
+        <view class="p-stem">{{currentQuestion.stem}}</view>
+      </view>
+
+      <!-- 客观题选项 -->
+      <block wx:if="{{isObjective}}">
+        <view
+          wx:for="{{currentQuestion.options}}"
+          wx:key="key"
+          class="mock-option {{currentChoice === item.key ? 'active' : ''}}"
+          bindtap="onSelect"
+          data-index="{{index}}"
+        >
+          <view class="mock-key {{currentChoice === item.key ? 'active' : ''}}">
+            {{item.key}}
+          </view>
+          <view class="flex-1 mock-option-text">{{item.text}}</view>
+        </view>
+      </block>
+
+      <!-- 主观题输入 -->
+      <block wx:else>
+        <view class="card">
+          <view class="row-between" style="margin-bottom:16rpx;">
+            <text class="title">材料分析题</text>
+          </view>
+          <textarea
+            class="mock-textarea"
+            placeholder="按评分点分点作答"
+            placeholder-class="mock-placeholder"
+            value="{{currentDraft}}"
+            bindinput="onInput"
+            maxlength="2000"
+            auto-height
+          />
+        </view>
+      </block>
+
+      <!-- 答题卡：一眼看到哪些题没做 -->
+      <view class="card">
+        <view class="title" style="margin-bottom:16rpx;">答题卡</view>
+        <view class="card-grid">
+          <view
+            wx:for="{{questions}}"
+            wx:key="id"
+            class="card-cell {{index === currentIndex ? 'current' : ''}} {{answeredMap[item.id] ? 'done' : 'undone'}}"
+            bindtap="onJump"
+            data-index="{{index}}"
+          >{{index + 1}}</view>
+        </view>
+        <view class="card-legend">
+          <view class="row"><view class="legend-dot undone"></view><text class="text-muted">未作答</text></view>
+          <view class="row"><view class="legend-dot done"></view><text class="text-muted">已作答</text></view>
+        </view>
+      </view>
+
+      <view class="footer-space"></view>
+    </view>
+
+    <!-- 底部操作 -->
+    <view class="footer-bar">
+      <view class="mock-nav">
+        <button class="btn btn-plain nav-btn {{currentIndex === 0 ? 'btn-disabled' : ''}}"
+                bindtap="onPrev" disabled="{{currentIndex === 0}}">上一题</button>
+        <button class="btn btn-primary nav-btn"
+                bindtap="onNext">{{currentIndex === questions.length - 1 ? '交卷' : '下一题'}}</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- ============ 阶段三：交卷后 ============ -->
+  <block wx:else>
+    <view class="container">
+      <view class="card done-card">
+        <view class="text-muted">模考成绩</view>
+        <view class="done-score num">{{score}}</view>
+        <view class="done-detail">
+          答对 {{correctCount}} / {{questions.length}} 题
+        </view>
+        <view class="done-tag {{score >= 90 ? 'ok' : (score >= 60 ? 'mid' : 'bad')}}">
+          {{score >= 90 ? '很扎实' : (score >= 60 ? '基本过关，继续巩固' : '需要加强')}}
+        </view>
+      </view>
+
+      <!-- 解析入口 -->
+      <view class="card">
+        <view class="title" style="margin-bottom:12rpx;">题目解析</view>
+        <view class="text-muted" style="margin-bottom:24rpx;">
+          模考错题已自动加入错题本，建议逐题复盘
+        </view>
+
+        <block wx:if="{{showExplain}}">
+          <view class="explain-item" wx:for="{{detailList}}" wx:key="id">
+            <view class="row-between" style="margin-bottom:12rpx;">
+              <text class="tag {{item.correct ? 'tag-green' : 'tag-orange'}}">
+                {{item.correct ? '答对' : '答错'}}
+              </text>
+              <text class="text-muted">{{item.moduleName}}</text>
+            </view>
+            <view class="explain-stem">{{item.stem}}</view>
+            <view class="row" style="margin-top:12rpx;">
+              <text class="text-muted">你的答案：{{item.myAnswer}}</text>
+              <text wx:if="{{!item.correct && item.rightAnswer}}" class="text-success" style="margin-left:20rpx;">
+                正确答案：{{item.rightAnswer}}
+              </text>
+            </view>
+            <view class="explain-box">
+              <view class="explain-text">{{item.explain}}</view>
+            </view>
+          </view>
+        </block>
+
+        <block wx:else>
+          <!--
+            变现设计：看广告解锁完整解析
+            广告未开通时 adsEnabled 为 false，wx:if 会走"直接解锁"分支，
+            用户不会被卡住。
+          -->
+          <button wx:if="{{adEnabled && !rewardedUnlocked}}" class="btn btn-primary" bindtap="onWatchAd">
+            看广告解锁完整解析
+          </button>
+          <button wx:else class="btn btn-primary" bindtap="onToggleExplain">
+            {{rewardedUnlocked ? '查看完整解析' : '查看题目解析'}}
+          </button>
+          <view class="text-muted" style="margin-top:16rpx;text-align:center;">
+            基础解析免费，看广告可解锁全部逐题解析
+          </view>
+        </block>
+      </view>
+
+      <button class="btn btn-ghost" bindtap="onRetry">再考一次</button>
+      <button class="btn btn-plain" style="margin-top:20rpx;" bindtap="onBackHome">
+        返回首页
+      </button>
+
+      <view class="footer-space"></view>
+    </view>
+  </block>
+</view>

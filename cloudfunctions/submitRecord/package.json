@@ -1,0 +1,9 @@
+{
+  "name": "submitRecord",
+  "version": "1.0.0",
+  "description": "批量上报答题记录，用于云端统计与数据备份",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

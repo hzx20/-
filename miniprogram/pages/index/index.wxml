@@ -1,0 +1,153 @@
+<!--
+  miniprogram/components/answer-sheet/index.wxml 不需要，
+  本文件是"首页"的模板。
+  实际上为了避免重复，下面用到的选项样式在 practice 页里也有，
+  所以把公共样式统一放到了 app.wxss。
+-->
+<view class="container">
+
+  <!-- ============ 考试倒计时 ============ -->
+  <!--
+    【产品决策】把倒计时放在最顶部，因为备考人群最关心"还剩多少时间"。
+    倒计时数字用大字号 + 主色，制造紧迫感。
+  -->
+  <view class="countdown-card" bindtap="onSwitchExam">
+    <view class="cd-left">
+      <view class="cd-label">{{examInfo.name || '笔试倒计时'}}</view>
+      <view class="cd-date">{{examInfo.written || '加载中'}}</view>
+    </view>
+    <view class="cd-right">
+      <block wx:if="{{examInfo.available}}">
+        <view class="cd-num">{{examInfo.days}}</view>
+        <view class="cd-unit">{{examInfo.isPassed ? '天前已考' : '天'}}</view>
+      </block>
+      <block wx:else>
+        <view class="cd-num cd-dash">--</view>
+      </block>
+    </view>
+    <!-- 报名状态提示条 -->
+    <view wx:if="{{showSignupTip}}" class="cd-tip">{{signupTipText}}</view>
+  </view>
+
+  <!-- ============ 今日进度 ============ -->
+  <view class="card">
+    <view class="row-between">
+      <view>
+        <view class="title">今天已刷</view>
+        <view class="text-muted">连续打卡 {{streakDays}} 天</view>
+      </view>
+      <view class="today-num">
+        <text class="num">{{todayCount}}</text>
+        <text class="text-muted"> 题</text>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="row-between">
+      <view class="text-muted">累计完成</view>
+      <view class="text-muted">{{stats.done}} / {{stats.total}} 题</view>
+    </view>
+    <view class="progress-bar" style="margin-top:16rpx;">
+      <view class="progress-inner" style="width:{{overallPercent}}%;"></view>
+    </view>
+    <view class="row-between" style="margin-top:16rpx;">
+      <view class="text-muted">总正确率</view>
+      <view class="text-primary num">{{stats.accuracy}}%</view>
+    </view>
+  </view>
+
+  <!-- ============ 快速开始 ============ -->
+  <!--
+    【产品决策】首页只放三个大按钮，不铺开所有功能。
+    备考用户要的是"马上能开始刷题"，选择越多越会犹豫。
+  -->
+  <view class="card">
+    <view class="title" style="margin-bottom:8rpx;">快速开始</view>
+    <view class="text-muted" style="margin-bottom:24rpx;">
+      {{weakTip}}
+    </view>
+
+    <button class="btn btn-primary quick-btn" bindtap="onStartDaily">
+      今日推荐 {{dailyCount}} 题
+    </button>
+
+    <button class="btn btn-ghost quick-btn" bindtap="onStartChapter">
+      按章节专项练习
+    </button>
+
+    <button class="btn btn-ghost quick-btn" bindtap="onStartMock">
+      开始模考（限时）
+    </button>
+  </view>
+
+  <!-- ============ 科目选择 ============ -->
+  <view class="card">
+    <view class="row-between" style="margin-bottom:20rpx;">
+      <view class="title">选择题目</view>
+    </view>
+
+    <view class="subject-row">
+      <view
+        wx:for="{{subjects}}"
+        wx:key="subject"
+        class="subject-item {{currentSubject === item.subject ? 'active' : ''}}"
+        bindtap="onSwitchSubject"
+        data-subject="{{item.subject}}"
+      >
+        <view class="subject-name">{{item.shortTitle}}</view>
+        <view class="subject-meta">{{item.questionCount}} 题</view>
+        <view
+          class="subject-percent"
+          wx:if="{{subjectProgress[item.subject]}}"
+        >{{subjectProgress[item.subject]}}%</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 模块列表 ============ -->
+  <view class="card">
+    <view class="row-between" style="margin-bottom:8rpx;">
+      <view class="title">{{currentSubjectTitle}}</view>
+      <text class="text-muted text-primary" bindtap="onStartRandom">全部随机 →</text>
+    </view>
+    <view class="text-muted" style="margin-bottom:8rpx;">
+      专项练习正确率最低的模块优先练
+    </view>
+
+    <view
+      wx:for="{{modules}}"
+      wx:key="key"
+      class="module-item"
+      bindtap="onStartModule"
+      data-module="{{item.key}}"
+    >
+      <view class="flex-1">
+        <view class="row-between">
+          <text class="module-name">{{item.name}}</text>
+          <text class="text-muted">{{moduleStat[item.key].done}}/{{moduleStat[item.key].total}}</text>
+        </view>
+        <view class="module-desc">{{item.desc}}</view>
+        <view class="progress-bar" style="margin-top:12rpx;">
+          <view
+            class="progress-inner"
+            style="width:{{modulePercent[item.key]}}%;"
+          ></view>
+        </view>
+      </view>
+      <view class="module-accuracy {{moduleStat[item.key].accuracy < 60 ? 'low' : ''}}">
+        <text class="num">{{moduleStat[item.key].accuracy}}</text>%
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 底部 banner 广告位 ============ -->
+  <!--
+    【为什么放这里】banner 广告放在长页面底部，
+    用户滑到底才看到，不干扰刷题决策。
+    adsEnabled 为 false 时整个块不渲染，页面不会留空白。
+  -->
+  <view wx:if="{{adEnabled}}" class="ad-slot">
+    <ad wx:if="{{adBannerId}}" unit-id="{{adBannerId}}" ad-type="banner"></ad>
+  </view>
+
+  <view class="footer-space"></view>
+</view>

@@ -1,0 +1,245 @@
+/* 刷题页样式 */
+
+.practice-page {
+  min-height: 100vh;
+  background: #F4F6FB;
+}
+
+/* ============ 顶部进度条 ============ */
+.p-top {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #FFFFFF;
+  padding: 20rpx 24rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.p-top-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.p-index {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1F5EFF;
+  font-family: 'DIN Alternate', -apple-system, sans-serif;
+}
+
+.p-score {
+  font-size: 26rpx;
+  color: #6B7280;
+}
+
+.p-exit {
+  margin-left: 28rpx;
+  font-size: 26rpx;
+  color: #9AA1AE;
+  padding: 4rpx 20rpx;
+  border-radius: 20rpx;
+  background: #F4F6FB;
+}
+
+/* ============ 题干 ============ */
+.p-body {
+  padding: 24rpx;
+}
+
+.p-stem {
+  font-size: 32rpx;
+  line-height: 1.75;
+  font-weight: 500;
+  color: #1A1D26;
+  white-space: pre-wrap;
+  /* 材料分析题的材料很长，限制宽度保证可读 */
+  word-break: break-word;
+}
+
+/* ============ 选项 ============ */
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 26rpx 24rpx;
+  margin-bottom: 16rpx;
+  border: 3rpx solid transparent;
+  transition: all 0.15s;
+}
+
+.option-item:active {
+  background: #F0F5FF;
+}
+
+/* 选项字母方块 */
+.option-key {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: #EEF1F7;
+  color: #6B7280;
+  font-size: 26rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.option-text {
+  flex: 1;
+  font-size: 30rpx;
+  line-height: 1.6;
+  padding-top: 6rpx;
+}
+
+/* 选中态 */
+.option-key.correct {
+  background: #1F5EFF;
+  color: #FFFFFF;
+}
+
+.option-item.correct {
+  border-color: #12B76A;
+  background: rgba(18, 183, 106, 0.06);
+}
+
+.option-key.wrong {
+  background: #F04438;
+  color: #FFFFFF;
+}
+
+.option-item.wrong {
+  border-color: #F04438;
+  background: rgba(240, 68, 56, 0.06);
+}
+
+/* 判分后未选的项变灰 */
+.option-item.disabled {
+  opacity: 0.5;
+}
+
+/* ============ 主观题输入 ============ */
+.p-textarea {
+  width: 100%;
+  min-height: 320rpx;
+  background: #F7F9FC;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 30rpx;
+  line-height: 1.7;
+  box-sizing: border-box;
+}
+
+.p-placeholder {
+  color: #B6BDC9;
+  font-size: 26rpx;
+}
+
+/* ============ 判分结果 ============ */
+.result-card {
+  border: 3rpx solid #E8ECF3;
+}
+
+.result-badge {
+  padding: 8rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.result-badge.ok {
+  background: rgba(18, 183, 106, 0.12);
+  color: #12B76A;
+}
+
+.result-badge.bad {
+  background: rgba(240, 68, 56, 0.12);
+  color: #F04438;
+}
+
+.right-answer {
+  background: rgba(18, 183, 106, 0.08);
+  color: #12B76A;
+  padding: 16rpx 24rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+}
+
+/* 评分点逐条反馈 */
+.point-list {
+  margin: 20rpx 0;
+}
+
+.point-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 18rpx;
+}
+
+.point-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  margin-top: 12rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.point-dot.hit {
+  background: #12B76A;
+}
+
+.point-dot.half {
+  background: #FF8A00;
+}
+
+.point-dot.miss {
+  background: #D6DBE5;
+}
+
+.point-text {
+  font-size: 27rpx;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.point-status {
+  font-size: 23rpx;
+  margin-top: 4rpx;
+}
+
+/* 解析 */
+.explain-box {
+  background: #F7F9FC;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-top: 20rpx;
+}
+
+.explain-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1F5EFF;
+  margin-bottom: 12rpx;
+}
+
+.explain-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #374151;
+}
+
+/* ============ 底部提示条 ============ */
+.tip-bar {
+  text-align: center;
+  font-size: 26rpx;
+  color: #9AA1AE;
+  padding: 20rpx 0;
+}

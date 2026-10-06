@@ -1,0 +1,161 @@
+<!--
+  miniprogram/pages/practice/practice.wxml —— 刷题页
+
+  【这个页面的核心交互逻辑】
+  1. 打开时抽好一组题，逐题展示
+  2. 客观题：点选项 → 立即判分 → 显示对错与解析 → 下一题
+  3. 主观题：输入文字 → 点提交 → 显示参考得分与评分点 → 下一题
+  4. 顶部有进度条，底部有操作区，中途退出进度会保存
+
+  【两种题为什么要分开处理】
+  客观题用户期望"秒反馈"——点完就该知道对错，延迟会让人烦躁。
+  主观题需要用户先构思，强制显示对错反而干扰思考。
+-->
+<view class="practice-page">
+
+  <!-- ============ 顶部进度 ============ -->
+  <view class="p-top">
+    <view class="p-top-row">
+      <text class="p-index">{{currentIndex + 1}}</text>
+      <text class="text-muted">/ {{questions.length}}</text>
+      <view class="flex-1"></view>
+      <text class="p-score">
+        正确 {{correctCount}}/{{answeredCount}}
+      </text>
+      <view class="p-exit" bindtap="onExit">退出</view>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-inner" style="width:{{progressPercent}}%;"></view>
+    </view>
+  </view>
+
+  <!-- ============ 答题区 ============ -->
+  <view wx:if="{{questions.length > 0}}" class="p-body">
+
+    <!-- 题干 -->
+    <view class="card">
+      <view class="row-between" style="margin-bottom:16rpx;">
+        <view class="row">
+          <text class="tag tag-blue">{{moduleName}}</text>
+          <text class="tag tag-gray">{{difficultyLabel}}</text>
+        </view>
+        <text class="text-muted">{{subjectTitle}}</text>
+      </view>
+      <view class="p-stem">{{currentQuestion.stem}}</view>
+    </view>
+
+    <!-- 客观题：选项列表 -->
+    <block wx:if="{{isObjective}}">
+      <view
+        wx:for="{{currentQuestion.options}}"
+        wx:key="key"
+        class="option-item {{optionClass[index]}}"
+        bindtap="onSelectOption"
+        data-index="{{index}}"
+      >
+        <view class="option-key {{optionClass[index]}}">{{item.key}}</view>
+        <view class="option-text">{{item.text}}</view>
+      </view>
+
+      <!-- 提交按钮：没选之前是禁用的，防止用户误以为可以直接跳过 -->
+      <button
+        class="btn {{userAnswer.length ? 'btn-primary' : 'btn-disabled'}}"
+        bindtap="onSubmit"
+        disabled="{{!userAnswer.length}}"
+      >提交答案</button>
+    </block>
+
+    <!-- 主观题：文本输入 -->
+    <block wx:else>
+      <view class="card">
+        <view class="row-between" style="margin-bottom:16rpx;">
+          <text class="title">材料分析题 · 请分点作答</text>
+          <text class="text-muted">{{userAnswer.length}} 字</text>
+        </view>
+        <textarea
+          class="p-textarea"
+          placeholder="建议按「理论 + 材料对应」分点作答，例如：&#10;1. 体现了教师是学生学习的引导者，材料中老师把课堂交给小组讨论……"
+          placeholder-class="p-placeholder"
+          value="{{userAnswer}}"
+          bindinput="onInput"
+          maxlength="2000"
+          auto-height
+        />
+        <view class="text-muted" style="margin-top:12rpx;">
+          参考答案为"按评分点命中比例"评分，60 分及格。评分逻辑为离线算法，非人工阅卷。
+        </view>
+      </view>
+
+      <button
+        class="btn btn-primary"
+        bindtap="onSubmit"
+        disabled="{{submitting}}"
+      >{{submitting ? '判分中...' : '提交作答'}}</button>
+    </block>
+
+    <!-- ============ 判分结果 ============ -->
+    <view wx:if="{{showResult}}" class="card result-card">
+      <view class="row-between" style="margin-bottom:16rpx;">
+        <view class="row">
+          <view class="result-badge {{result.correct ? 'ok' : 'bad'}}">
+            {{isObjective ? (result.correct ? '回答正确' : '回答错误') : '参考得分 ' + result.score}}
+          </view>
+        </view>
+        <text class="text-muted">{{result.aiScored ? 'AI 评分' : '关键词评分'}}</text>
+      </view>
+
+      <!-- 客观题：正确答案 -->
+      <view wx:if="{{isObjective && !result.correct}}" class="right-answer">
+        正确答案：{{rightAnswerText}}
+      </view>
+
+      <!-- 主观题：评分点逐条反馈 -->
+      <view wx:if="{{result.details.length}}" class="point-list">
+        <view class="point-item" wx:for="{{result.details}}" wx:key="index">
+          <view class="point-dot {{item.hit === 1 ? 'hit' : (item.hit === 0.5 ? 'half' : 'miss')}}"></view>
+          <view class="flex-1">
+            <view class="point-text">{{item.point}}</view>
+            <view class="point-status {{item.hit === 1 ? 'text-success' : 'text-muted'}}">
+              {{item.comment}}
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 解析 -->
+      <view class="explain-box">
+        <view class="explain-title">解析</view>
+        <view class="explain-text">{{currentQuestion.explain}}</view>
+      </view>
+    </view>
+
+    <view class="footer-space"></view>
+  </view>
+
+  <!-- ============ 空状态 ============ -->
+  <view wx:else class="empty">
+    <view class="empty-icon">📭</view>
+    <view class="empty-text">这个范围里没有题目</view>
+    <button class="btn btn-ghost" style="margin-top:40rpx;" bindtap="onExit">
+      返回
+    </button>
+  </view>
+
+  <!-- ============ 底部操作条 ============ -->
+  <view class="footer-bar" wx:if="{{questions.length > 0}}">
+    <block wx:if="{{showResult}}">
+      <button class="btn btn-primary" bindtap="onNext">
+        {{isLastQuestion ? '查看本组结果' : '下一题'}}
+      </button>
+    </block>
+    <block wx:else>
+      <!--
+        未答题时的底部只放一个提示，不放按钮。
+        按钮放在选项区下方（见上面），这样"选完就提交"的手势路径最短。
+      -->
+      <view class="tip-bar">
+        {{isObjective ? (userAnswer.length ? '已选择，点击上方"提交答案"' : '请选择一个选项') : '写完后点击上方"提交作答"'}}
+      </view>
+    </block>
+  </view>
+</view>

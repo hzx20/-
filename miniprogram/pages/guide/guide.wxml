@@ -1,0 +1,141 @@
+<!-- 使用说明页 -->
+<view class="container guide-page">
+
+  <!-- 头部介绍 -->
+  <view class="guide-hero">
+    <view class="hero-title">教资刷题</view>
+    <view class="hero-sub">教师资格证笔试备考工具</view>
+    <view class="hero-stat">
+      当前题库 {{totalQuestions}} 题 · 覆盖 {{totalModules}} 个模块
+    </view>
+  </view>
+
+  <!-- ============ 功能说明 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:20rpx;">四个主要功能</view>
+
+    <view class="func-item">
+      <view class="func-num">1</view>
+      <view class="flex-1">
+        <view class="func-title">刷题（首页）</view>
+        <view class="func-desc">
+          首页提供三个入口。今日推荐会优先给你挑正确率最低的模块，不用自己纠结从哪开始；
+          按章节专项练习适合系统性过完某一块；
+          限时模考练的是时间感，真实笔试做不完往往不是因为不会，而是没练过节奏。
+        </view>
+      </view>
+    </view>
+
+    <view class="func-item">
+      <view class="func-num">2</view>
+      <view class="flex-1">
+        <view class="func-title">错题本</view>
+        <view class="func-desc">
+          做错的题会自动进来。做对了会自动移出，所以这里永远是你"还没真正掌握"的题。
+          考前一周只刷错题本，比从头刷一遍效率高很多。
+        </view>
+      </view>
+    </view>
+
+    <view class="func-item">
+      <view class="func-num">3</view>
+      <view class="flex-1">
+        <view class="func-title">数据</view>
+        <view class="func-desc">
+          看最近 7 天的做题量趋势和各模块正确率。
+          正确率低于 60% 的模块会标红，那就是接下来该补的地方。
+        </view>
+      </view>
+    </view>
+
+    <view class="func-item">
+      <view class="func-num">4</view>
+      <view class="flex-1">
+        <view class="func-title">我的</view>
+        <view class="func-desc">
+          设置考试场次（影响首页倒计时）、调整每组题量、清除数据。
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 主观题答题方法（最重要） ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:12rpx;">材料分析题怎么答才拿分</view>
+    <view class="text-muted" style="margin-bottom:24rpx;">
+      这类题是拉分点，也是最容易瞎写的地方。判分按"评分点命中比例"算，答不到点上等于白答。
+    </view>
+
+    <view class="method-item">
+      <view class="method-label">第一步 · 先写理论</view>
+      <view class="method-desc">
+        每个要点开头先写理论名称。比如"教师是学生学习的引导者和促进者"，而不是直接描述现象。
+        阅卷老师按要点给分，没有理论名称的描述很难对上评分点。
+      </view>
+    </view>
+
+    <view class="method-item">
+      <view class="method-label">第二步 · 结合材料</view>
+      <view class="method-desc">
+        理论后面必须跟材料里的具体细节。"材料中王老师把课堂交给小组讨论，这正体现了……"
+        只写理论不结合材料，最多给一半分。
+      </view>
+    </view>
+
+    <view class="method-item">
+      <view class="method-label">第三步 · 分点写</view>
+      <view class="method-desc">
+        一条一个点，用"1. 2. 3."或换行分开。写成一整段阅卷老师很难找要点。
+      </view>
+    </view>
+
+    <view class="method-example">
+      <view class="method-example-title">示例（以"教师观"为例）</view>
+      <view class="method-example-body">
+        1. 该老师的做法体现了教师是学生学习的引导者和促进者。材料中她没有直接讲授结论，而是把课堂交给小组讨论，引导学生自主探究。&#10;&#10;2. 体现了尊重学生、平等对待学生的学生观。材料中她意识到"学生要的是被尊重"，把学生看作有独立意志的主体。&#10;&#10;3. 体现了教师是教育教学的研究者。她从投票变化这一现象中反思自己的教学方式并主动改进。
+      </view>
+    </view>
+
+    <view class="method-note">
+      提示：交卷后会逐条显示你命中了哪些评分点，对着看一遍就知道下次该怎么写了。
+    </view>
+  </view>
+
+  <!-- ============ 题库覆盖范围 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:20rpx;">题库覆盖</view>
+    <view class="subject-row" wx:for="{{subjectList}}" wx:key="subject">
+      <view class="flex-1">
+        <view class="subject-name">{{item.shortTitle}} · {{item.title}}</view>
+        <view class="text-muted">{{item.questionCount}} 题 / {{item.moduleCount}} 个模块</view>
+      </view>
+    </view>
+    <view class="method-note">
+      题库会持续补充。每补一批题都会标注出处，优先收录历年真题与高频考点。
+    </view>
+  </view>
+
+  <!-- ============ 反馈 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:12rpx;">反馈与建议</view>
+    <view class="text-muted" style="margin-bottom:20rpx;">
+      一个人做的小程序，最缺的是真实反馈。发现题目错误、功能不好用、想加什么功能，
+      都欢迎提出来，会在下一版改。
+    </view>
+    <button class="btn btn-ghost" bindtap="onCopyFeedback">
+      复制反馈入口
+    </button>
+  </view>
+
+  <!-- ============ 免责说明 ============ -->
+  <view class="card">
+    <view class="title" style="margin-bottom:12rpx;">关于题目与判分</view>
+    <view class="disclaimer">
+      <view>· 本工具的题目为按考纲整理的练习题，不等同于历年真题，仅供备考参考。</view>
+      <view>· 主观题为"评分点关键词命中率"的离线算法评分，非人工阅卷，仅作参考。</view>
+      <view>· 最终请以官方考试大纲和历年真题为准，祝考试顺利。</view>
+    </view>
+  </view>
+
+  <view class="footer-space"></view>
+</view>

@@ -1,0 +1,172 @@
+/* 首页样式 */
+/* 说明：app.wxss 里已定义通用类，这里只写首页独有的 */
+
+.countdown-card {
+  background: linear-gradient(135deg, #1F5EFF 0%, #4B8BFF 100%);
+  border-radius: 24rpx;
+  padding: 36rpx 32rpx;
+  margin-bottom: 24rpx;
+  color: #FFFFFF;
+  box-shadow: 0 8rpx 24rpx rgba(31, 94, 255, 0.25);
+}
+
+.cd-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.cd-label {
+  font-size: 28rpx;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.cd-date {
+  font-size: 24rpx;
+  opacity: 0.75;
+}
+
+/* 倒计时数字放大，是首页的视觉焦点 */
+.cd-right {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  margin-top: -56rpx;
+  gap: 8rpx;
+}
+
+.cd-num {
+  font-size: 88rpx;
+  font-weight: 700;
+  line-height: 1;
+  font-family: 'DIN Alternate', -apple-system, sans-serif;
+}
+
+.cd-dash {
+  opacity: 0.6;
+}
+
+.cd-unit {
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+/* 报名状态提示 */
+.cd-tip {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 2rpx solid rgba(255, 255, 255, 0.25);
+  font-size: 24rpx;
+  opacity: 0.95;
+}
+
+.today-num {
+  display: flex;
+  align-items: baseline;
+}
+
+.today-num .num {
+  font-size: 48rpx;
+  color: #1F5EFF;
+}
+
+/* 快速开始按钮：三个竖排大按钮 */
+.quick-btn {
+  margin-bottom: 20rpx;
+  width: 100%;
+}
+
+.quick-btn:last-child {
+  margin-bottom: 0;
+}
+
+/* 科目切换器 */
+.subject-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.subject-item {
+  flex: 1;
+  padding: 24rpx 12rpx;
+  border-radius: 16rpx;
+  background: #F4F6FB;
+  margin-right: 16rpx;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.subject-item:last-child {
+  margin-right: 0;
+}
+
+/* 选中的科目用主色描边+白底，和未选中的形成对比 */
+.subject-item.active {
+  background: #FFFFFF;
+  border: 3rpx solid #1F5EFF;
+  padding: 22rpx 10rpx;
+}
+
+.subject-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+
+.subject-meta {
+  font-size: 22rpx;
+  color: #9AA1AE;
+}
+
+/* 科目完成百分比角标 */
+.subject-percent {
+  font-size: 22rpx;
+  color: #1F5EFF;
+  margin-top: 4rpx;
+}
+
+/* 模块列表项 */
+.module-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #F0F2F6;
+}
+
+.module-item:last-child {
+  border-bottom: none;
+}
+
+.module-name {
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.module-desc {
+  font-size: 23rpx;
+  color: #9AA1AE;
+  margin-top: 4rpx;
+}
+
+/* 模块正确率 */
+.module-accuracy {
+  margin-left: 24rpx;
+  min-width: 88rpx;
+  text-align: right;
+  font-size: 26rpx;
+  color: #12B76A;
+}
+
+.module-accuracy.low {
+  color: #F04438;
+}
+
+/* 广告容器 */
+.ad-slot {
+  margin-top: 24rpx;
+  padding: 16rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  min-height: 100rpx;
+}

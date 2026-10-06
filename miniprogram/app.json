@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/subject/subject",
+    "pages/practice/practice",
+    "pages/result/result",
+    "pages/wrongbook/wrongbook",
+    "pages/mock/mock",
+    "pages/stats/stats",
+    "pages/mine/mine",
+    "pages/guide/guide"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1F5EFF",
+    "navigationBarTitleText": "教资刷题",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F4F6FB",
+    "navigationStyle": "default"
+  },
+  "tabBar": {
+    "color": "#8A93A6",
+    "selectedColor": "#1F5EFF",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "刷题"
+      },
+      {
+        "pagePath": "pages/wrongbook/wrongbook",
+        "text": "错题本"
+      },
+      {
+        "pagePath": "pages/stats/stats",
+        "text": "数据"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json",
+  "permission": {},
+  "requiredPrivateInfos": []
+}
