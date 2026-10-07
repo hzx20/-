@@ -53,7 +53,7 @@
 │   ├── bank_stats.py        题库难度分级统计与结构体检
 │   ├── add_questions.py     题目导入（自动查重+ 校验）
 │   ├── test_grade.js        判分逻辑测试（73 项）
-│   ├── test_store.js        存储逻辑测试（49 项）
+│   ├── test_store.js        存储逻辑测试（55 项）
 │   ├── test_cloud_ad.js     云调用与广告降级测试（34 项）
 │   └── check_project.py     项目完整性自检
 └── docs/                    配置指引与 SEO 清单
@@ -83,7 +83,7 @@ python tools/validate_bank.py
 # 判分逻辑（73 项）
 node tools/test_grade.js
 
-# 存储逻辑（49 项）
+# 存储逻辑（55 项）
 node tools/test_store.js
 
 # 云调用与广告降级（34 项）
