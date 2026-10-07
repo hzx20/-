@@ -165,6 +165,17 @@ def main():
     dup = [x for x in set(ids) if ids.count(x) > 1]
     if dup:
         problems.append('批内 id 重复: %s' % dup)
+
+    # id 前缀必须与所在题库科目一致
+    # 【真实教训】题库里出现过 s2-402L 混在 subject1.json 的 law 模块里，
+    # 单看每个文件都合法（不重复、不撞号），但跨科目统计会把它算错科目，
+    # 去重也会漏检。这类错误只有跨文件比对才看得出来。
+    want_prefix = 's1-' if target == 'subject1' else 's2-'
+    wrong = [q['id'] for q in new if not q['id'].startswith(want_prefix)]
+    if wrong:
+        problems.append('id 前缀与科目不符（%s 应以 %s 开头）: %s'
+                        % (target, want_prefix, wrong))
+
     exist = set()
     for path in BANK.values():
         exist |= {x['id'] for x in json.load(io.open(path, encoding='utf-8'))['questions']}
