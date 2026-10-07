@@ -318,6 +318,62 @@ const st6 = bank.getStats(p3);
 check('跨科目统计正确数正确', st6.correct, st3.correct);
 check('跨科目正确率在 0-100 之间', st6.accuracy <= 100 && st6.accuracy >= 0, true);
 
+/* ==========================================================
+ * 判断题专项测试（2026-10-07 新增）
+ *
+ * 【为什么单独加】题库扩到50+ 题时新增了 judge（判断题）类型，
+ * 但以前从没测过。判断题只有 A/B 两个选项，
+ * 万一判分逻辑默认按 4 选项处理（比如按下标算正确项），就会静默判错。
+ * 这类 bug 页面上完全看不出来，所以必须固化成测试。
+ * ========================================================== */
+const allQ7 = bank.getSubject(1).questions.concat(bank.getSubject(2).questions);
+const judgeQs = allQ7.filter(function (q) { return q.type === 'judge'; });
+check('题库中存在判断题（前提校验）', judgeQs.length > 0, true);
+
+if (judgeQs.length > 0) {
+  const j = judgeQs[0];
+
+  // 判断题必须恰好 2 个选项
+  check('判断题恰好 2 个选项', j.options.length, 2);
+
+  // 答案必须是合法选项之一
+  const validKeys = j.options.map(function (o) { return o.key; });
+  check('判断题答案在选项范围内', validKeys.indexOf(j.answer[0]) >= 0, true);
+
+  // 选对 → 判对
+  const rJudgeRight = grade.gradeObjective(j, j.answer);
+  check('判断题选正确答案 → 判对', rJudgeRight.correct, true);
+
+  // 选错 → 判错（取另一个选项）
+  const wrongKey = validKeys.filter(function (k) { return k !== j.answer[0]; })[0];
+  const rJudgeWrong = grade.gradeObjective(j, [wrongKey]);
+  check('判断题选错误答案 → 判错', rJudgeWrong.correct, false);
+
+  // 未作答 → 判错，且不得抛异常
+  const rJudgeEmpty = grade.gradeObjective(j, []);
+  check('判断题未作答 → 判错', rJudgeEmpty.correct, false);
+
+  // 所有判断题逐一验证：正确答案必须能判对
+  let judgeAllOk = true;
+  judgeQs.forEach(function (q) {
+    const r = grade.gradeObjective(q, q.answer);
+    if (!r.correct) { judgeAllOk = false; }
+  });
+  check('全部判断题用标准答案都能判对', judgeAllOk, true);
+}
+
+/* ==========================================================
+ * 题型标签测试（2026-10-07 新增）
+ *
+ * 【背景】之前 result.js 和 wrongbook.js 各自硬编码
+ * `type === 'material' ? '材料分析' : '单选'`，
+ * 导致判断题被错误显示成"单选"。现已抽到 bank.getTypeLabel。
+ * ========================================================== */
+check('getTypeLabel: 单选', bank.getTypeLabel('single'), '单选');
+check('getTypeLabel: 判断', bank.getTypeLabel('judge'), '判断');
+check('getTypeLabel: 材料分析', bank.getTypeLabel('material'), '材料分析');
+check('getTypeLabel: 未知类型兜底为单选', bank.getTypeLabel('unknown'), '单选');
+
 console.log('\n' + '='.repeat(46));
 console.log('通过 ' + pass + ' 项，失败 ' + fail + ' 项');
 if (fail > 0) {

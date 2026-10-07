@@ -4,11 +4,13 @@
   "private": true,
   "description": "教资刷题小程序 - 教师资格证笔试备考工具",
   "scripts": {
-    "test": "node tools/test_grade.js && node tools/test_store.js",
+    "test": "node tools/test_grade.js && node tools/test_store.js && node tools/test_cloud_ad.js",
     "test:grade": "node tools/test_grade.js",
     "test:store": "node tools/test_store.js",
+    "test:cloud": "node tools/test_cloud_ad.js",
     "validate:bank": "python tools/validate_bank.py",
-    "check": "npm run validate:bank && npm test"
+    "stats:bank": "python tools/bank_stats.py",
+    "check": "npm run validate:bank && npm test && python tools/check_project.py"
   },
   "keywords": [
     "教资",

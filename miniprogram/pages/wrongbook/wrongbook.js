@@ -179,7 +179,7 @@ Page({
           /** 是否已掌握：最近一次做对了就是掌握 */
           mastered: !!(rec && rec.correct),
           /** 主客观题标签，影响用户预期（材料分析要做大题） */
-          typeLabel: q.type === 'material' ? '材料分析' : '单选'
+          typeLabel: bank.getTypeLabel(q.type)
         };
       });
 
@@ -277,7 +277,7 @@ Page({
       difficultyLabel: this._difficultyLabel(q.difficulty),
       /** 是否有选项，材料分析题没有选项 */
       hasOptions: !!(q.options && q.options.length),
-      typeLabel: q.type === 'material' ? '材料分析' : '单选题'
+      typeLabel: bank.getTypeLabel(q.type)
     };
   },
 

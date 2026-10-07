@@ -297,6 +297,27 @@ function getDailyPlan(progress, subject, count) {
   return pickQuestions({ subject: subject, count: count });
 }
 
+/**
+ * 题型代码 → 中文标签
+ *
+ * 【为什么放在这里】题型判断是题库的知识，各页面都要用。
+ * 之前 result.js 和 wrongbook.js 各自写了 `type === 'material' ? '材料分析' : '单选'`，
+ * 抽到这里之后，判断题（judge）不会再被误显示成"单选"。
+ *
+ * @param {string} type 题型代码
+ * @returns {string} 中文标签
+ */
+const TYPE_LABELS = {
+  single: '单选',
+  judge: '判断',
+  material: '材料分析',
+  essay: '写作'
+};
+
+function getTypeLabel(type) {
+  return TYPE_LABELS[type] || '单选';
+}
+
 module.exports = {
   getSubjects,
   getSubject,
@@ -308,5 +329,6 @@ module.exports = {
   getStats,
   recommendWeakModule,
   getDailyPlan,
+  getTypeLabel,
   shuffle
 };

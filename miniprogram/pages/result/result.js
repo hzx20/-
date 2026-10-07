@@ -254,7 +254,7 @@ Page({
       moduleName: moduleNameMap[q.module] || '',
       difficultyLabel: this._difficultyLabel(q.difficulty),
       /** 主观题（材料分析）额外标一下，用户预期不同 */
-      typeLabel: q.type === 'material' ? '材料分析' : '单选'
+      typeLabel: bank.getTypeLabel(q.type)
     };
   },
 
