@@ -10,6 +10,7 @@
     "test:cloud": "node tools/test_cloud_ad.js",
     "validate:bank": "python tools/validate_bank.py",
     "stats:bank": "python tools/bank_stats.py",
+    "check:new": "python tools/check_new_questions.py",
     "check": "npm run validate:bank && npm test && python tools/check_project.py"
   },
   "keywords": [

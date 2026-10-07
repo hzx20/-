@@ -51,7 +51,8 @@
 ├── tools/                   开发辅助脚本
 │   ├── validate_bank.py     题库格式校验
 │   ├── bank_stats.py        题库难度分级统计与结构体检
-│   ├── add_questions.py     题目导入（自动查重+ 校验）
+│   ├── check_new_questions.py 出题六项自查（乱码/英文/结构/撞号/引号/查重）
+│   ├── add_questions.py     题目导入（自动查重 + 校验）
 │   ├── test_grade.js        判分逻辑测试（73 项）
 │   ├── test_store.js        存储逻辑测试（55 项）
 │   ├── test_cloud_ad.js     云调用与广告降级测试（34 项）
@@ -104,7 +105,26 @@ python tools/check_project.py
 
 ### 5. 加题库
 
-题库是纯 JSON，改完跑一下 `python tools/validate_bank.py` 确认格式。
+题库是纯 JSON，**改之前先查，改之后再导**，顺序不能反：
+
+```bash
+# 1. 把新题存成 JSON，先做六项自查
+python tools/check_new_questions.py 待导入.json
+
+# 2. 自查通过再导入
+python tools/add_questions.py 待导入.json
+
+# 3. 导入后必跑
+python tools/validate_bank.py    # 格式
+python tools/bank_stats.py       # 难度分布
+```
+
+六项自查专治肉眼看不见的问题。前几批出题每批都被它逮到过：
+混入英文单词、判断题答案写成 `[True]`、材料题漏参考答案、
+id 与单选题撞号、中文引号转义被 shell 还原、
+以及最危险的**考点和已入库题目重复** —— 用户刷到重复题会以为程序坏了。
+
+查重报出的是「疑似」，每一处仍需人工核对题干和答案。
 加新科目请看 [miniprogram/data/README.md](miniprogram/data/README.md)。
 
 ## 核心设计说明
@@ -198,7 +218,11 @@ SEO 配置见 [docs/SEO配置清单.md](docs/SEO配置清单.md)。
 
 ## 已知问题与后续计划
 
-- [ ] 题库量偏少（191 题），需扩到 500+ 题才够用
+- [ ] 题库量偏少（295 题），需扩到 500+ 题才够用
+      - 当前：科目一 130（易 32% / 中 47% / 难 22%）
+      - 科目二 165（易 24% / 中 61% / 难 15%）
+      - 短板模块：科目一基本能力 10 题、文化素养 22 题
+      - 科目二班级管理 26 题、学科知识与教学设计 28 题
 - [ ] 科目三（学科知识）未做，需按考试科目拆
 - [ ] 面试题库未做
 - [ ] 无 AI 判分（接口已预留）
