@@ -62,6 +62,29 @@ def check_quote_pair(text):
     return not st
 
 
+def check_quote_nested(text):
+    """检测引号嵌套错误。
+
+    【为什么单独加这项】
+    栈式检测只管数量配不配平，但下面这种写法数量是配平的却是错的：
+        「五岳「中被称为」西岳」的是
+    外层引号被内层提前闭合，读起来完全不通。
+    实测题库里真的出现过这道错题（s1-021c），而自查工具没拦住。
+
+    中文正文里不该出现嵌套，正确写法是并列：
+        「五岳」中被称为「西岳」的是
+    """
+    depth = 0
+    for ch in text:
+        if ch == '「':
+            depth += 1
+            if depth > 1:
+                return False
+        elif ch == '」':
+            depth -= 1
+    return True
+
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__)
@@ -154,6 +177,9 @@ def main():
         for f in ['stem', 'explain']:
             if not check_quote_pair(q.get(f, '')):
                 problems.append('%s %s 中文引号未配对' % (q['id'], f))
+            elif not check_quote_nested(q.get(f, '')):
+                problems.append('%s %s 中文引号嵌套错误（应改用并列引号）'
+                                % (q['id'], f))
 
     # 6 近似重复
     #
