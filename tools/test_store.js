@@ -190,6 +190,39 @@ check('全部过期时 isPassed', info.isPassed, true);
 check('无考试配置不崩溃', store.buildExamInfo({}, Date.now()).available, false);
 check('空数组不崩溃', store.buildExamInfo({ written: [] }, Date.now()).available, false);
 
+/**
+ * 【新增】official 标记：官方没公布日期的场次，必须能被识别出来。
+ *
+ * 【为什么必须测】这是防止"把估算日期当官方日期骗用户"的护栏。
+ * 假如以后有人改config 时把 official:false 漏掉了，
+ * 界面上"暂估"标签和提示条就都不显示了，测试能立刻抓到。
+ */
+console.log('\n=== 4.1 日期是否为官方确认 ===');
+info = store.buildExamInfo({
+  written: [{ key: 'est', name: '估算场次', written: `${y}-${m}-${d}`, official: false }]
+}, Date.now());
+check('official 为 false 时透传 false', info.official, false);
+
+info = store.buildExamInfo({
+  written: [{ key: 'conf', name: '官方场次', written: `${y}-${m}-${d}`, official: true }]
+}, Date.now());
+check('official 为 true 时透传 true', info.official, true);
+
+// 老配置根本没写 official 字段 → 按已确认处理，避免历史数据显示成未知
+info = store.buildExamInfo({
+  written: [{ key: 'legacy', name: '老配置', written: `${y}-${m}-${d}` }]
+}, Date.now());
+check('缺省 official 时按 true 处理', info.official, true);
+
+// 真实配置里必须至少有一场未确认的2027 场次（现在还没到公告时间）
+const realConf = require('../miniprogram/config/index.js');
+const unconfirmed = realConf.examDates.written.filter((d) => d.official === false);
+check('真实配置中未公布场次已标为暂估', unconfirmed.length >= 1, true);
+const confirmed = realConf.examDates.written.filter((d) => d.official === true);
+check('真实配置中已公布场次标为确认', confirmed.length >= 1, true);
+// 所有场次的日期字段都不能为空，否则倒计时会算出 NaN
+check('所有场次都有笔试日期', realConf.examDates.written.every((d) => !!d.written), true);
+
 console.log('\n=== 5. 用户设置 ===');
 store.clearAll();
 const s = store.getSettings();

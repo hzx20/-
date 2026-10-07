@@ -313,6 +313,13 @@ function buildExamInfo(dates, now, pickedKey) {
     interview: target.interview,
     days: days,
     isPassed: isPassed,
+    /**
+     * 【新增】这场考试的日期是否已被官方公告确认。
+     * false 表示还是我们按往年规律估的，界面必须标注"暂估"，
+     * 不能让用户以为这是确定的日子。
+     * 老配置没写official 时按 true 处理（缺省宽松，避免旧数据显示成未知）。
+     */
+    official: target.official !== false,
     /** 报名开放状态提示 */
     stage: isPassed ? 'closed' : (days <= (examDates.signupEndLeadDays || 15) ? 'signing' : 'open')
   };

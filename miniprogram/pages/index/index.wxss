@@ -27,6 +27,23 @@
   opacity: 0.75;
 }
 
+/*
+  "暂估"小标签：贴在考试日期后面。
+  做成描边胶囊而不是实心色块 —— 它是提醒不是警告，
+  颜色太重会让用户以为出了什么故障，反而制造焦虑。
+*/
+.cd-estimate {
+  display: inline-block;
+  margin-left: 10rpx;
+  padding: 0 10rpx;
+  font-size: 20rpx;
+  line-height: 32rpx;
+  color: #b8860b;
+  border: 1rpx solid #b8860b;
+  border-radius: 6rpx;
+  vertical-align: middle;
+}
+
 /* 倒计时数字放大，是首页的视觉焦点 */
 .cd-right {
   display: flex;

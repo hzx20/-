@@ -233,7 +233,9 @@ Page({
      * 以后如果要加到 7 场以上，得改成自绘弹层。
      */
     wx.showActionSheet({
-      itemList: list.map((d) => d.name + '（' + d.written + '）'),
+      // 与首页保持一致：未官方确认的场次标注"暂估"
+      itemList: list.map((d) => d.name + '（' + d.written + '）' +
+        (d.official === false ? ' 暂估' : '')),
       success: (res) => {
         const picked = list[res.tapIndex];
         if (!picked) return;

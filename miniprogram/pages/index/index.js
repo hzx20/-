@@ -214,7 +214,15 @@ Page({
     let signupTipText = '';
 
     if (examInfo && examInfo.available && !examInfo.isPassed) {
-      if (examInfo.stage === 'signing') {
+      if (examInfo.official === false) {
+        /**
+         * 【重要】日期还没官方公布，这条提示优先级最高。
+         * 如果这里也去说"报名即将截止"，用户会拿一个估算日期当真，
+         * 白跑一趟考场。所以先说清楚"日子还没定"。
+         */
+        showSignupTip = true;
+        signupTipText = '今年笔试日期官方还没公布，这里按往年规律暂估，请以教育部公告为准';
+      } else if (examInfo.stage === 'signing') {
         showSignupTip = true;
         signupTipText = '笔试报名即将截止，别错过';
       } else {
@@ -278,7 +286,9 @@ Page({
   onSwitchExam() {
     const list = config.examDates.written;
     const current = this.data.examInfo.key;
-    const labels = list.map((d) => d.name + '（' + d.written + '）');
+    // 未官方确认的场次，选项里直接带"（暂估）"，别等选完才知道
+    const labels = list.map((d) => d.name + '（' + d.written + '）' +
+      (d.official === false ? ' 暂估' : ''));
 
     wx.showActionSheet({
       itemList: labels,

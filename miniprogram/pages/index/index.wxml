@@ -15,6 +15,11 @@
     <view class="cd-left">
       <view class="cd-label">{{examInfo.name || '笔试倒计时'}}</view>
       <view class="cd-date">{{examInfo.written || '加载中'}}</view>
+      <!--
+        官方还没公布这一场日期时，日期后面挂一个"暂估"标记。
+        wx:if 的条件是 official === false，即只有估算场次才显示。
+      -->
+      <view wx:if="{{examInfo.available && examInfo.official === false}}" class="cd-estimate">暂估</view>
     </view>
     <view class="cd-right">
       <block wx:if="{{examInfo.available}}">
